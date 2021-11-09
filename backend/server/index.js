@@ -1,5 +1,6 @@
 const express = require('express');
-const router = require('./routes');
+const snomeRoutes = require('./routes/snome.routes.js');
+const user = require('/routes/user.routes.js')
 
 const app = express();
 const port = 3000;
@@ -18,7 +19,9 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/', router);
+app.use('/snome', snomeRoutes);
+app.use('/user', userRoutes);
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
