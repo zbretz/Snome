@@ -12,8 +12,20 @@ exports.create = (req, res) => {
 
   // Create a Snome
   const snome = {
-    title: req.body.title,
-    description: req.body.description,
+    owner_id: req.body.owner_id,
+    location_id: req.body.location_id,
+    header: req.body.header,
+    time_to_mountain: req.body.time_to_mountain,
+    mountain_access: req.body.mountain_access,
+    availability_start: req.body.availability_start,
+    availability_end: req.body.availability_end,
+    street_address: req.body.street_address,
+    bedrooms: req.body.bedrooms,
+    bathrooms: req.body.bathrooms,
+    number_of_beds: req.body.number_of_beds,
+    perks: req.body.perks,
+    snome_description: req.body.snome_description,
+    //nice demo of alernative to 'default' in schema
     published: req.body.published ? req.body.published : false
   };
 
