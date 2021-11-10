@@ -15,10 +15,11 @@ const db = require('../../database');
   exports.findAll = async () => {
     try {
       let result = await db.query(`SELECT * FROM Snome`)
-      return result;
+      // return result;
+      return 'test'
     } catch(err) {
       console.log(`DATABASE ERROR: ${err}`)
     }
   }
 
-};
+// };

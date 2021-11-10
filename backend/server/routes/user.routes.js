@@ -25,6 +25,4 @@ var router = require("express").Router();
   // Create a new Snome
   router.delete("/", snomes.deleteAll);
 
-// };
-
-module.exports = router;
+  module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express');
 const snomeRoutes = require('./routes/snome.routes.js');
-const user = require('/routes/user.routes.js')
+const userRoutes = require('./routes/user.routes.js')
 
 const app = express();
 const port = 3000;
