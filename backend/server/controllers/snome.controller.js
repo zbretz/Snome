@@ -25,7 +25,7 @@ exports.create = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Tutorial."
+          err.message || "Some error occurred while creating the Snome."
       });
     });
 
@@ -33,6 +33,17 @@ exports.create = (req, res) => {
 
 // Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
+
+  Snome.findAll()
+    .then(data => {
+      res.send(data);x
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Snome."
+      });
+    });
 
 };
 

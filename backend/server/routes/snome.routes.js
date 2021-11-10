@@ -1,28 +1,28 @@
 const snomes = require("../controllers/snome.controller.js");
 var router = require("express").Router();
 
-module.exports =  {
+// module.exports =  {
 
 
-  // Create a new Tutorial
+  // Create a new Snome
   router.post("/", snomes.create);
 
-  // Retrieve all snomes
+  // Retrieve all Snomes
   router.get("/", snomes.findAll);
 
-  // Retrieve all published snomes
+  // Retrieve all published Snomes
   router.get("/published", snomes.findAllPublished);
 
-  // Retrieve a single Tutorial with id
+  // Retrieve a single Snome with id
   router.get("/:id", snomes.findOne);
 
-  // Update a Tutorial with id
+  // Update a Snome with id
   router.put("/:id", snomes.update);
 
-  // Delete a Tutorial with id
+  // Delete a Snome with id
   router.delete("/:id", snomes.delete);
 
-  // Create a new Tutorial
+  // Create a new Snome
   router.delete("/", snomes.deleteAll);
 
-};
+// };
