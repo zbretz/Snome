@@ -4,6 +4,10 @@ const db = require('../../database');
 
 // module.exports = {
   exports.create =  async snome => {
+
+  }
+
+  exports.findAll = async () => {
     try {
       let result = await db.query(`SELECT * FROM Snome`)
       return result;
@@ -12,11 +16,10 @@ const db = require('../../database');
     }
   }
 
-  exports.findAll = async () => {
+  exports.findOne = async (id) => {
     try {
-      let result = await db.query(`SELECT * FROM Snome`)
-      // return result;
-      return 'test'
+      let result = await db.query(`SELECT * FROM Snome WHERE id = ${id}`)
+      return result;
     } catch(err) {
       console.log(`DATABASE ERROR: ${err}`)
     }

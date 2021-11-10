@@ -36,7 +36,7 @@ exports.findAll = (req, res) => {
 
   Snome.findAll()
     .then(data => {
-      res.send(data);x
+      res.send(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -49,7 +49,17 @@ exports.findAll = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
-
+  const id = req.params.id;
+  Snome.findOne(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Snome."
+      });
+    });
 };
 
 // Update a Tutorial by the id in the request
