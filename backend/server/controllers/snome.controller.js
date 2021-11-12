@@ -3,12 +3,12 @@ const Snome = require("../models/snome.model.js");
 // Create and Save a new Snome
 exports.create = (req, res) => {
   // Validate request
-  // if (!req.body.title) {
-  //   res.status(400).send({
-  //     message: "Content can not be empty!"
-  //   });
-  //   return;
-  // }
+  if (!req.body.owner_id) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+    return;
+  }
 
   // Create a Snome
   const snome = {
@@ -25,21 +25,25 @@ exports.create = (req, res) => {
     number_of_beds: req.body.number_of_beds,
     perks: req.body.perks,
     snome_description: req.body.snome_description,
-    //nice demo of alernative to 'default' in schema
-    published: req.body.published ? req.body.published : false
+    //nice demo of alernative to 'default in schema:
+    //published: req.body.published ? req.body.published : false
   };
 
+  console.log(req.body.owner_id)
+  res.send(req.body)
+
   // Save the Snome in the database
-  Snome.create(snome)
-    .then(data => {
-      res.send(data);x
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Snome."
-      });
-    });
+
+  // Snome.create(snome)
+  //   .then(data => {
+  //     res.send(data);x
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message:
+  //         err.message || "Some error occurred while creating the Snome."
+  //     });
+  //   });
 
 };
 
