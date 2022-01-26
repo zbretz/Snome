@@ -2,6 +2,7 @@ const { get, helpers } = require('../models');
 const user = require('../models/user')
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+require('dotenv').config()
 
 const authenticate = (pass1, pass2) => {
   // return bcrypt.compareSync(pass, model[name].pass)
@@ -17,7 +18,8 @@ module.exports = {
       const auth_user = await user.getUserByName(req.body.name);
       let is_auth = authenticate(auth_user.password, req.body.password)
       if (!is_auth) throw new Error('credentials did not match')
-      const token = jsonwebtoken.sign('abc', '123');
+      const token = jsonwebtoken.sign('abc', "5fc6cc72-7c43-416d-94da-8a763d6af6f9");
+      // process.env.TOKEN_SECRET
       console.log(token)
       res.header("auth-token", token)
       res.status(200).send({auth_user, token});

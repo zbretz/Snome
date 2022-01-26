@@ -2,6 +2,8 @@ const controller = require("../controllers");
 const router = require("express").Router();
 const { uploadSnomePhotos } = require("./middleware/multer.js");
 const jwt = require('express-jwt');
+require('dotenv').config()
+
 
 /* define API url to handler mappings here, organized by model and CRUD */
 module.exports = router;
@@ -66,14 +68,15 @@ router.post('/snome/:id/photos', uploadSnomePhotos.any('snome_photos'), controll
 /* TESTING PROTECTED ROUTES */
 
 router.get("/unprotected", (req, res)=>{
+  console.log(process.env.TOKEN_SECRET)
   res.send('unprotected: success')
 });
 
-router.get("/protected", jwt({ secret: '123', algorithms: ['HS256'] }), (req, res) => {
+router.get("/protected", jwt({ secret: "5fc6cc72-7c43-416d-94da-8a763d6af6f9", algorithms: ['HS256'] }), (req, res) => {
   res.send('protected: success')
 });
 
-router.get("/protected_has_token", jwt({ secret: '123', algorithms: ['HS256'] }), (req, res) => {
+router.get("/protected_has_token", jwt({ secret: "5fc6cc72-7c43-416d-94da-8a763d6af6f9", algorithms: ['HS256'] }), (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
