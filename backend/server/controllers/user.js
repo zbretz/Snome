@@ -20,7 +20,7 @@ module.exports = {
       if (!is_auth) throw new Error('credentials did not match')
       const token = jsonwebtoken.sign('abc', "5fc6cc72-7c43-416d-94da-8a763d6af6f9");
       // process.env.TOKEN_SECRET
-      console.log(token)
+      console.log('login.js: ',token)
       res.header("auth-token", token)
       res.status(200).send({auth_user, token});
     } catch(err) {

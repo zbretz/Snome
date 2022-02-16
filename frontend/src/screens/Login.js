@@ -30,7 +30,6 @@ export default function Login() {
         })
         .then(res => {
             // let token = req.header('Authorization');
-
             console.log(res)
             console.log(res.data);
 
@@ -81,20 +80,21 @@ export default function Login() {
       const protectedHasTokenTest = async (e) => {
 
         const token = await AsyncStorage.getItem('token')
+        console.log(`Bearer ${token.slice(1, token.length-1)}`)
 
         e.preventDefault()
         axios({
           method: 'get',
           url: 'http://localhost:3000/protected_has_token',
           headers: {
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.YWJj.USwP3aNMfDCRyY4PiAV7RMWWOjSMu8v8j7J4-CI7ve0`
+            'Authorization': `Bearer ${token.slice(1, token.length-1)}`
           }
         })
         .then(res => {
             console.log(res)
           })
         .catch( err => {
-          console.log(err)
+          console.log('protected error: ', err)
         })
       }
 
