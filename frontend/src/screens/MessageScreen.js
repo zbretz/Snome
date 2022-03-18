@@ -114,7 +114,7 @@ const MessageScreen = () => {
   const sendMessage = async () => {
 
     axios.post(
-      'http://localhost:3000/messages/',
+      'http://10.0.0.53:3000/messages/',
       {sender_id:user_id, recipient_id:showThread, message_text:newMessage}
     )
     .then((new_message)=>{
@@ -130,7 +130,7 @@ const MessageScreen = () => {
 
   };
 
-  var ws = React.useRef(new WebSocket('ws://localhost:8080')).current;
+  var ws = React.useRef(new WebSocket('ws://10.0.0.53:8080')).current;
   const [serverMessages, setServerMessages] = useState('');
 
   const [temp, setTemp] = useState('empty')
@@ -139,7 +139,6 @@ const MessageScreen = () => {
 
     ws.onopen = () => {
       ws.send(JSON.stringify({source: 'client', id: user_id}))
-
     };
     // ws.onclose = (e) => {
     //   setServerState('Disconnected. Check internet or server.')
@@ -154,7 +153,6 @@ const MessageScreen = () => {
       console.log('parsed data: ', JSON.parse(e.data))
       let new_message = JSON.parse(e.data)
       console.log('NEW MESSAGE DATA WS: ', new_message)
-      // sortMessagesByOtherUser([new_message, ...messages])
       console.log('messages[length-1]: ', context.messages[context.messages.length-1])
       context.setMessages([new_message, ...context.messages])
       sortMessagesByOtherUser([new_message, ...context.messages])

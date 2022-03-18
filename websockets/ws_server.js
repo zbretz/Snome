@@ -17,20 +17,23 @@ app.get('/', (req,res)=>{
 })
 
 app.post("/:id", (req, res) => {
-  console.log('Got body:', req.body.msg_txt);
+  let { notification_content } = req.body
+  let { notifcation_type } = req.body
+
+  console.log('Got body:', notification_content);
   console.log('num of clients: ', Object.keys(CLIENTS).length)
   console.log('params: ', req.params)
+  console.log(notifcation_type)
   if (req.params.id){
     if (CLIENTS[req.params.id]){
       //pass along ws message
-      CLIENTS[req.params.id].send(req.body.msg_txt)
+      CLIENTS[req.params.id].send(notification_content)
       //response to app server
       console.log('client exists')
       res.send('client exists!')
     } else {
       res.send('no exist!')
       console.log('no exists')
-
     }
     // res.send(req.params.id)
   }
@@ -41,6 +44,7 @@ wss.on("connection", function connection(ws) {
 
   ws.on("message", function incoming(message, isBinary) {
     message = JSON.parse(message)
+
     if (message.source === 'client'){
       //if client connects
       CLIENTS[message.id] = ws
