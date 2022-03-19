@@ -18,12 +18,13 @@ app.get('/', (req,res)=>{
 
 app.post("/:id", (req, res) => {
   let { notification_content } = req.body
-  let { notifcation_type } = req.body
+  let { notification_type } = req.body
 
   console.log('Got body:', notification_content);
   console.log('num of clients: ', Object.keys(CLIENTS).length)
-  console.log('params: ', req.params)
-  console.log(notifcation_type)
+  console.log(notification_type)
+  console.log(req.params)
+  console.log(notification_content)
   if (req.params.id){
     if (CLIENTS[req.params.id]){
       //pass along ws message
@@ -41,6 +42,8 @@ app.post("/:id", (req, res) => {
 });
 
 wss.on("connection", function connection(ws) {
+
+  console.log('connected')
 
   ws.on("message", function incoming(message, isBinary) {
     message = JSON.parse(message)
