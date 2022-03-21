@@ -69,9 +69,23 @@ export default function Login() {
             .then(async (res) => {
                 // user_id = res.data.auth_user.id
                 console.log('user id: ', res.data.auth_user.id)
-                let user_messages = await fetch(`http://10.0.0.53:3000/messages/${res.data.auth_user.id}`)
+                let user_messages = await fetch(`http://10.0.0.53:3000/messages/${res.data.auth_user.   id}`)
                 let messages_json = await user_messages.json()
                 context.setMessages(messages_json)
+
+                let ws = context.websocket_connection
+
+                ws.onmessage = async (e) => {
+                    console.log(e)
+                    console.log(e.data)
+                    console.log('parsed data: ', JSON.parse(e.data))
+                    let new_message = JSON.parse(e.data)
+                    console.log('NEW MESSAGE DATA WS: ', new_message)
+                    console.log('messages[length-1]: ', context.messages[context.messages.length-1])
+                    context.setMessages([new_message, ...context.messages])
+                    // sortMessagesByOtherUser([new_message, ...context.messages])
+                  };
+
             })
             .catch(err => {
                 console.log(err)

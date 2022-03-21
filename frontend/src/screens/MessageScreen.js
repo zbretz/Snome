@@ -98,6 +98,7 @@ const MessageScreen = () => {
   const tabBarHeight = useBottomTabBarHeight();
 
   const sortMessagesByOtherUser = (messages) => {
+    console.log('DINGALING')
     const recentByOtherUser = {}
     const message_queue = []
     messages.forEach(msg => {
@@ -137,28 +138,30 @@ const MessageScreen = () => {
 
   useEffect(() => {
 
-    let ws = context.websocket_connection
+    // let ws = context.websocket_connection
 
     // ws.onopen = () => {
     //   ws.send(JSON.stringify({source: 'client', id: user_id}))
     // };
-    // ws.onclose = (e) => {
-    //   setServerState('Disconnected. Check internet or server.')
-    //   setDisableButton(true);
+
+    // // ws.onclose = (e) => {
+    // //   setServerState('Disconnected. Check internet or server.')
+    // //   setDisableButton(true);
+    // // };
+    // // ws.onerror = (e) => {
+    // //   setServerState(e.message);
+    // // };
+
+    // ws.onmessage = async (e) => {
+    //   console.log(e)
+    //   console.log(e.data)
+    //   console.log('parsed data: ', JSON.parse(e.data))
+    //   let new_message = JSON.parse(e.data)
+    //   console.log('NEW MESSAGE DATA WS: ', new_message)
+    //   console.log('messages[length-1]: ', context.messages[context.messages.length-1])
+    //   context.setMessages([new_message, ...context.messages])
+    //   // sortMessagesByOtherUser([new_message, ...context.messages])
     // };
-    // ws.onerror = (e) => {
-    //   setServerState(e.message);
-    // };
-    ws.onmessage = async (e) => {
-      console.log(e)
-      console.log(e.data)
-      console.log('parsed data: ', JSON.parse(e.data))
-      let new_message = JSON.parse(e.data)
-      console.log('NEW MESSAGE DATA WS: ', new_message)
-      console.log('messages[length-1]: ', context.messages[context.messages.length-1])
-      context.setMessages([new_message, ...context.messages])
-      sortMessagesByOtherUser([new_message, ...context.messages])
-    };
 
 
     if (context.messages) {
