@@ -13,7 +13,6 @@ export default function Login() {
         UseTogglePasswordVisibility();
     const navigation = useNavigation()
     const context = useContext(UserContext)
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user_id, setUser_id] = useState(null)
@@ -30,6 +29,21 @@ export default function Login() {
                 console.log('use Effect user_id: ', user_id)
                 context.websocket_connection.send(JSON.stringify({source: 'client', id: user_id}))
             };
+
+            // if(context.messages){
+
+            context.websocket_connection.onmessage = async (e) => {
+                console.log(e)
+                console.log(e.data)
+                console.log('parsed data: ', JSON.parse(e.data))
+                let new_message = JSON.parse(JSON.parse(e.data).notification_content)
+                console.log('NEW MESSAGE DATA WS: ', new_message)
+                console.log('messages[length-1]: ', context.messages[context.messages.length-1])
+                context.setMessages([new_message, ...context.messages])
+                // sortMessagesByOtherUser([new_message, ...context.messages])
+              };
+            // }
+
         }
     }, [context.websocket_connection])
 
@@ -43,6 +57,16 @@ export default function Login() {
                 password: password
             }
         })
+        .then(async (res) => {
+            // user_id = res.data.auth_user.id
+            console.log('user id: ', res.data.auth_user.id)
+            let user_messages = await fetch(`http://10.0.0.53:3000/messages/${res.data.auth_user.id}`)
+            let messages_json = await user_messages.json()
+            context.setMessages(messages_json)
+
+            return res
+
+        })
             .then(res => {
 
                 setUser_id(res.data.auth_user.id)
@@ -50,6 +74,7 @@ export default function Login() {
                 console.log('OTHER axios user_id: ', res.data.auth_user.id)
 
                 context.setWebsocket_connection(new WebSocket('ws://10.0.0.53:8080'))
+
                 console.log('!!!websocket connection: ', context.websocket_connection)
 
                 console.log(res)
@@ -66,27 +91,7 @@ export default function Login() {
 
                 return res
             })
-            .then(async (res) => {
-                // user_id = res.data.auth_user.id
-                console.log('user id: ', res.data.auth_user.id)
-                let user_messages = await fetch(`http://10.0.0.53:3000/messages/${res.data.auth_user.   id}`)
-                let messages_json = await user_messages.json()
-                context.setMessages(messages_json)
 
-                let ws = context.websocket_connection
-
-                ws.onmessage = async (e) => {
-                    console.log(e)
-                    console.log(e.data)
-                    console.log('parsed data: ', JSON.parse(e.data))
-                    let new_message = JSON.parse(e.data)
-                    console.log('NEW MESSAGE DATA WS: ', new_message)
-                    console.log('messages[length-1]: ', context.messages[context.messages.length-1])
-                    context.setMessages([new_message, ...context.messages])
-                    // sortMessagesByOtherUser([new_message, ...context.messages])
-                  };
-
-            })
             .catch(err => {
                 console.log(err)
             })

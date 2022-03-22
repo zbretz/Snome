@@ -98,7 +98,6 @@ const MessageScreen = () => {
   const tabBarHeight = useBottomTabBarHeight();
 
   const sortMessagesByOtherUser = (messages) => {
-    console.log('DINGALING')
     const recentByOtherUser = {}
     const message_queue = []
     messages.forEach(msg => {
@@ -134,8 +133,6 @@ const MessageScreen = () => {
   // var ws = React.useRef(new WebSocket('ws://10.0.0.53:8080')).current;
   const [serverMessages, setServerMessages] = useState('');
 
-  const [temp, setTemp] = useState('empty')
-
   useEffect(() => {
 
     // let ws = context.websocket_connection
@@ -162,7 +159,6 @@ const MessageScreen = () => {
     //   context.setMessages([new_message, ...context.messages])
     //   // sortMessagesByOtherUser([new_message, ...context.messages])
     // };
-
 
     if (context.messages) {
       sortMessagesByOtherUser(context.messages)
