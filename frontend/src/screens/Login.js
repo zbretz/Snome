@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import UseTogglePasswordVisibility from '../components/useTogglePassowrdVisibility';
 
+import * as Notifications from 'expo-notifications';
+
 
 export default function Login() {
     const { passwordVis, rightIcon, handlePasswordVisibility } =
@@ -16,12 +18,17 @@ export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user_id, setUser_id] = useState(null)
+    const [t, st] = useState('test')
 
     // let user_id;
 
     const B = (props) => <Text style={{ fontWeight: 'bold', color: "#448EB1" }}>{props.children}</Text>
 
-    useEffect(()=>{
+    useEffect(async()=>{
+        const token = await Notifications.getDevicePushTokenAsync()
+        st(token.data)
+        console.log(token.data)
+
         console.log('useeffect ws connection 1: ', context.websocket_connection)
         if(context.websocket_connection){
             console.log('useeffect ws connection 2: ', context.websocket_connection)
@@ -99,6 +106,10 @@ export default function Login() {
 
     return (
         <View style={{ width: "95%", maxWidth: 400, margin: 10 }} >
+
+            {/* <View>{Object.keys(t).map(e => <Text>{e}</Text>)}</View> */}
+
+            <Text>{t}</Text>
 
             <Image source={require('../../assets/Snome.png')}
                 style={{ width: 100, height: 100 }} />
