@@ -92,14 +92,34 @@ module.exports = {
   //createUser moved to './user'
 
   createLike: async (req, res) => {
-    try {
-      console.log(req.params);
-      let data = await post.createLike(req.params);
-      res.status(200).json(data);
-    } catch (err) {
-      console.log(err);
-      res.status(400).send(err);
-    }
+    // try {
+    //   console.log(req.params);
+    //   let data = await post.createLike(req.params);
+    //   res.status(200).json(data);
+    // } catch (err) {
+    //   console.log(err);
+    //   res.status(400).send(err);
+    // }
+
+    post
+      .createLike(req.body)
+      .then((data) => {
+        res.send(data);
+      })
+      .then((data) => {
+        //once saved to db, send to recipient via websockets
+        axios.post(`http://10.0.0.53:8080/${req.body.recipient_id}`,
+        {notification_type: 'like', notification_content: JSON.stringify({...req.body, time: data.time, id: data.id})},
+        // {msg_txt: req.body.message_text},
+        {headers: {'Content-Type': 'application/json;charset=utf-8'}}
+        )
+      })
+      .catch(err => {
+        res.status(500).send(
+          "Some error occurred while creating the message."
+        )
+      })
+
   },
 
   createMessage: (req, res) => {

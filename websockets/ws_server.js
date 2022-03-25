@@ -20,6 +20,8 @@ app.post("/:id", (req, res) => {
   let { notification_content } = req.body
   let { notification_type } = req.body
 
+  if (notification_type === 'like') res.send("Like received");
+
   console.log('Got body:', notification_content);
   console.log('num of clients: ', Object.keys(CLIENTS).length)
   console.log(notification_type)
