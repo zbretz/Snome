@@ -51,7 +51,7 @@ export default function Login() {
         e.preventDefault()
         axios({
             method: 'post',
-            url: 'http://10.0.0.53:3000/login',
+            url: 'http://localhost:3000/login',
             data: {
                 username: username,
                 password: password
@@ -60,7 +60,7 @@ export default function Login() {
         .then(async (res) => {
             // user_id = res.data.auth_user.id
             console.log('user id: ', res.data.auth_user.id)
-            let user_messages = await fetch(`http://10.0.0.53:3000/messages/${res.data.auth_user.id}`)
+            let user_messages = await fetch(`http://localhost:3000/messages/${res.data.auth_user.id}`)
             let messages_json = await user_messages.json()
             context.setMessages(messages_json)
 
@@ -73,7 +73,7 @@ export default function Login() {
                 // console.log('axios user_id: ', user_id)
                 console.log('OTHER axios user_id: ', res.data.auth_user.id)
 
-                context.setWebsocket_connection(new WebSocket('ws://10.0.0.53:8080'))
+                context.setWebsocket_connection(new WebSocket('ws://localhost:8080'))
 
                 console.log('!!!websocket connection: ', context.websocket_connection)
 
