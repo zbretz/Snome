@@ -36,11 +36,16 @@ export default function Login() {
                 console.log(e)
                 console.log(e.data)
                 console.log('parsed data: ', JSON.parse(e.data))
-                let new_message = JSON.parse(JSON.parse(e.data).notification_content)
-                console.log('NEW MESSAGE DATA WS: ', new_message)
-                console.log('messages[length-1]: ', context.messages[context.messages.length-1])
-                context.setMessages([new_message, ...context.messages])
-                // sortMessagesByOtherUser([new_message, ...context.messages])
+
+                context.setAlertScreen('Message')
+
+                if (notification_type === 'message'){
+                    let new_message = JSON.parse(JSON.parse(e.data).notification_content)
+                    console.log('NEW MESSAGE DATA WS: ', new_message)
+                    console.log('messages[length-1]: ', context.messages[context.messages.length-1])
+                    context.setMessages([new_message, ...context.messages])
+                    // sortMessagesByOtherUser([new_message, ...context.messages])
+                }
               };
             // }
 
