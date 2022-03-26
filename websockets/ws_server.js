@@ -20,7 +20,7 @@ app.post("/:id", (req, res) => {
   let { notification_content } = req.body
   let { notification_type } = req.body
 
-  if (notification_type === 'like') res.send("Like received");
+  if (notification_type === 'Likes') res.send("Like received");
 
   console.log('Got body:', notification_content);
   console.log('num of clients: ', Object.keys(CLIENTS).length)
@@ -30,7 +30,7 @@ app.post("/:id", (req, res) => {
   if (req.params.id){
     if (CLIENTS[req.params.id]){
       //pass along ws message
-      CLIENTS[req.params.id].send(JSON.stringify({notfication_type: notification_type, notification_content: notification_content}))
+      CLIENTS[req.params.id].send(JSON.stringify({notification_type: notification_type, notification_content: notification_content}))
         //response to app server
       console.log('client exists')
       res.send('client exists!')

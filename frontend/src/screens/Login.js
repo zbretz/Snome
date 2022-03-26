@@ -37,9 +37,13 @@ export default function Login() {
                 console.log(e.data)
                 console.log('parsed data: ', JSON.parse(e.data))
 
-                context.setAlertScreen('Message')
+                let notification_type = JSON.parse(e.data).notification_type
 
-                if (notification_type === 'message'){
+                context.setAlertScreen(notification_type)
+
+                console.log('sdcsdcd: ', notification_type)// === 'Message')
+
+                if (notification_type === 'Message'){
                     let new_message = JSON.parse(JSON.parse(e.data).notification_content)
                     console.log('NEW MESSAGE DATA WS: ', new_message)
                     console.log('messages[length-1]: ', context.messages[context.messages.length-1])
