@@ -102,14 +102,14 @@ module.exports = {
     // }
 
     post
-      .createLike(req.body)
+      .createLike(req.params)
       .then((data) => {
         res.send(data);
       })
       .then((data) => {
         //once saved to db, send to recipient via websockets
-        axios.post(`http://10.0.0.53:8080/${req.body.recipient_id}`,
-        {notification_type: 'like', notification_content: JSON.stringify({...req.body, time: data.time, id: data.id})},
+        axios.post(`http://10.0.0.53:8080/${req.body.owner_id}`,
+        {notification_type: 'like'},// notification_content: JSON.stringify({...req.body, time: data.time, id: data.id})},
         // {msg_txt: req.body.message_text},
         {headers: {'Content-Type': 'application/json;charset=utf-8'}}
         )
