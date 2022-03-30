@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState  } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,12 +17,25 @@ const screenHeight = Dimensions.get('window').height;
 const { width } = Dimensions.get('window');
 const height = width * 0.6;
 
+
+const BookingView = ({ matches }) => {
+
+  return (
+    <Text>bada bing</Text>
+  )
+
+}
+
+
 function MatchScreen() {
   const [data, setData] = useState([]);
   const context = useContext(UserContext);
   const user_id = context.user_data.user_id;
   const setTracker = context.setTracker;
   const tracker = context.stateTracker;
+
+  // view will toggle 'display' and 'booking' views
+  const [view, setView] = useState('display')
 
   const [active, setActive] = useState([0]);
 
@@ -51,9 +64,32 @@ function MatchScreen() {
 
   return (
     <View style={{ height: screenHeight }}>
+
+<Text style={styles.title}>Your matches</Text>
+
+
+<TouchableOpacity
+          onPress={() => {
+            
+              setView(()=>view === 'display' ? 'booking' : 'display')
+          }
+          }
+        >
+          <Text style={styles.headerButton}>Book a match</Text>
+
+        </TouchableOpacity>
+
+    {view === 'booking' && 
+    
+      <BookingView />
+    
+    }
+      
       <ScrollView>
         {/* <Image style={styles.tinyLogo} source={require('../pics/Snome.png')} /> */}
-        <Text style={styles.title}>Your matches</Text>
+
+
+
         {data ? (
           data.map((item, index) => (
             <Card style={styles.container} key={index}>
@@ -122,13 +158,29 @@ function MatchScreen() {
         ) : (
           <Text>You don't have any liked Snome's...GO check some out!</Text>
         )}
+
+
+
         {/* <Button onPress={getData} title="get data">Get Data</Button> */}
       </ScrollView>
+
+
+
+
     </View>
   );
 }
 
 const styles = {
+  headerButton: {
+    backgroundColor: "white",
+    padding: 6,
+    height: 50,
+    width: '50%',
+    textAlign: 'center',
+    fontSize: 30,
+    margin: 'auto'
+  },
   tinyLogo: {
     width: 150,
     height: 150,
