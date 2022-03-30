@@ -76,7 +76,10 @@ const MessageCard = ({ message, setShowThread, user_id }) => {
   )
 }
 
-const MessageScreen = () => {
+const MessageScreen = ({route}) => {
+
+  const params = route.params;
+  console.log('parqms passed by match screen: ', route)
 
   const context = useContext(UserContext)
   const user_id = context.user_data.user_id
