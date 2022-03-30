@@ -53,7 +53,7 @@ function MatchScreen() {
     <View style={{ height: screenHeight }}>
       <ScrollView>
         {/* <Image style={styles.tinyLogo} source={require('../pics/Snome.png')} /> */}
-        <Text style={styles.title}>Snome's you LOVE</Text>
+        <Text style={styles.title}>Your matches</Text>
         {data ? (
           data.map((item, index) => (
             <Card style={styles.container} key={index}>
