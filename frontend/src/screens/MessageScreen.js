@@ -83,12 +83,23 @@ const MessageScreen = () => {
       console.log('Snome not able to be added to snome_message ', error)
     })
 
-  };
+  };  
+
+  const sortMessagesByOtherUser = (messages) => {
+    const conversationThreads = {}//{other_user: null, messages:[]}
+    messages.forEach(msg => {
+      let other_user = msg.recipient_id === user_id ? msg.sender_id : msg.recipient_id
+      if (!conversationThreads.hasOwnProperty(other_user)) {conversationThreads[other_user] = []}
+      conversationThreads[other_user].push(msg)      
+    })
+    console.log(conversationThreads)
+  }
 
   useEffect(() => {
 
     if (context.messages) {
       // sortMessagesByOtherUser(context.messages)
+      sortMessagesByOtherUser(context.messages)
       console.log(context.messages)
     }
 
