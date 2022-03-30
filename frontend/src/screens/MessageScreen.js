@@ -7,6 +7,21 @@ const axios = require('axios');
 
 
 const styles = {
+
+  allthreads: {
+
+    borderRadius: 20,
+    // border: '2px solid black',
+    backgroundColor: 'white',
+    width: '80%',
+    // margin: 'auto',
+    marginTop: 40,
+    boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
+    padding: 10
+
+
+  },
+
   card: {
     margin: 4,
     borderWidth: 2,
@@ -77,19 +92,17 @@ const MessageScreen = () => {
       conversationThreads[other_user].push(msg)
     })
     console.log(conversationThreads)
-    Object.values(conversationThreads).map(i => { console.log(i[0]) })
+    // Object.values(conversationThreads).map(i => { console.log(i[0]) })
     console.log('map: ', Object.values(conversationThreads).map(i => i[0].id)
     )
     setConversations(conversationThreads)
-    // return conversationThreads
   }
 
   useEffect(() => {
 
     if (context.messages) {
-      // sortMessagesByOtherUser(context.messages)
       groupMessagesByOtherUser(context.messages)
-      console.log(context.messages)
+      // console.log(context.messages)
     }
 
     const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {
@@ -114,86 +127,76 @@ const MessageScreen = () => {
   }, [context.messages])
 
   const renderItem = ({ item }) => {
-    console.log('selectedConvo renderItem: ', selectedConvo)
 
     return (
-      // Object.entries(item).map((entry)=><Text key={entry.id}>{entry}</Text>)
       <MessageCard
         key={item.id}
         // style={{ flex: 1, flexDirection: 'row-reverse', }}
         message={item}
-        // setView={setView}
-        // selectedConvo = {selectedConvo}
-        // setSelectedConvo = {setSelectedConvo}
         user_id={user_id}
-      // setShowThread={setShowThread}
-      // user_id={user_id}
       />
     )
   }
 
   const MessageCard = ({ message }) => {
-  
+
     return (
       <View>
-      <>
-      {view === 'all threads' &&
-        <TouchableOpacity
-          // style={{ flex: 1, flexDirection: 'row' }}
-          onPress={() => {
-            setView('selected thread')
-            setSelectedConvo(message.sender_id === user_id ? message.recipient_id : message.sender_id)
-          }}>
-          <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
-          >
-            <View >
-              {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
+        <>
+          {view === 'all threads' &&
+            <TouchableOpacity
+              // style={{ flex: 1, flexDirection: 'row' }}
+              onPress={() => {
+                setView('selected thread')
+                setSelectedConvo(message.sender_id === user_id ? message.recipient_id : message.sender_id)
+              }}>
+              <View style={{flex:1, flexDirection:"column", alignItems: "center"}}//style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+              >
+                <View style={styles.allthreads} >
+                  {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
-  
-              <Text style={{backgroundColor:'white'}}>message_sender: {message.sender_id}</Text>
-              <Text>message_recipient: {message.recipient_id}</Text>
-              <Text>{message.time}</Text>
-              <Text>{message.message_text}</Text>
-              <Text>{message.id}</Text>
-  
-            </View>
-          </View>
-        </TouchableOpacity>
-  }
-      </>
 
-      <>
-      {view === 'selected thread' &&
+                  <Text>message_sender: {message.sender_id}</Text>
+                  <Text>message_recipient: {message.recipient_id}</Text>
+                  <Text>{message.time}</Text>
+                  <Text>{message.message_text}</Text>
+                  <Text>{message.id}</Text>
 
-         
-          <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
-          >
-            <View >
-              {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          }
+        </>
+
+        <>
+          {view === 'selected thread' &&
+
+
+            <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+            >
+              <View >
+                {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
-  
-              <Text style={{backgroundColor:'white'}}>message_sender: {message.sender_id}</Text>
-              <Text>message_recipient: {message.recipient_id}</Text>
-              <Text>{message.time}</Text>
-              <Text>{message.message_text}</Text>
-              <Text>{message.id}</Text>
-  
+
+                <Text style={{ backgroundColor: 'white' }}>message_sender: {message.sender_id}</Text>
+                <Text>message_recipient: {message.recipient_id}</Text>
+                <Text>{message.time}</Text>
+                <Text>{message.message_text}</Text>
+                <Text>{message.id}</Text>
+
+              </View>
             </View>
-          </View>
-  }
-      </>
+          }
+        </>
       </View>
     )
   }
-
-  console.log('message screen main: ', selectedConvo)
-
 
   return (
 
@@ -218,12 +221,12 @@ const MessageScreen = () => {
           {conversations &&
             view === 'selected thread' &&
             <>
-            <Text>{selectedConvo}</Text>
+              <Text>{selectedConvo}</Text>
               <View
-                // style={{
-                //   //the static numbers represent the text input height (with padding) and the headerButton height (padding)
-                //   height: windowHeight - keyboardHeight - tabBarHeight - 80 - 62
-                // }}
+              // style={{
+              //   //the static numbers represent the text input height (with padding) and the headerButton height (padding)
+              //   height: windowHeight - keyboardHeight - tabBarHeight - 80 - 62
+              // }}
               >
 
                 <TouchableOpacity  >
