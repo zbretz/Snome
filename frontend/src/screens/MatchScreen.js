@@ -21,7 +21,29 @@ const height = width * 0.6;
 const BookingView = ({ matches }) => {
 
   return (
-    <Text>bada bing</Text>
+
+    <View>
+      <Text>Matches appear here</Text>
+
+      {matches && (
+        matches.map((item, index) => (
+          <Card style={styles.container} key={index}>
+            {/* <TouchableOpacity
+            onPress={() => {
+              setTracker(item.snome_id);
+              navigation.navigate('Description', {
+                snome_id: item.snome_id,
+              });
+            }}
+          >
+            </TouchableOpacity> */}
+
+            <Card.Content>
+              <Text>{item.description}</Text>
+            </Card.Content >
+          </Card>
+        )))}
+    </View>
   )
 
 }
@@ -42,7 +64,7 @@ const DisplayView = ({ matches }) => {
   return (
 
     <ScrollView>
-      {/* <Image style={styles.tinyLogo} source={require('../pics/Snome.png')} /> */} 
+      {/* <Image style={styles.tinyLogo} source={require('../pics/Snome.png')} /> */}
 
       {matches ? (
         matches.map((item, index) => (
@@ -151,13 +173,13 @@ function MatchScreen() {
       <Text style={styles.title}>Your matches</Text>
 
       <TouchableOpacity
-        onPress={() => {setView(() => view === 'display' ? 'booking' : 'display')}}
+        onPress={() => { setView(() => view === 'display' ? 'booking' : 'display') }}
       >
         <Text style={styles.headerButton}>Book a match</Text>
 
       </TouchableOpacity>
 
-      {view === 'booking' && <BookingView />}
+      {view === 'booking' && <BookingView matches={data} />}
 
       {view === 'display' && <DisplayView matches={data} />}
 
