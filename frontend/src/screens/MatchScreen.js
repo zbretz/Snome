@@ -20,15 +20,23 @@ const height = width * 0.6;
 
 const BookingView = ({ matches }) => {
 
+  const [currentMatch, setCurrentMatch] = useState();
+
   return (
 
     <View>
       <Text>Matches appear here</Text>
 
+      <Text>Current Match: {currentMatch} </Text>
+
       {matches && (
-        matches.map((item, index) => (
-          <Card style={styles.container} key={index}>
-            {/* <TouchableOpacity
+        matches.map((item, index) => {
+          console.log(typeof item.owner_id)
+          console.log(typeof currentMatch)
+          return (
+          <Card style={[styles.container]} onPress={()=>setCurrentMatch(item.owner_id)} key={index}>
+
+          {/* <TouchableOpacity
             onPress={() => {
               setTracker(item.snome_id);
               navigation.navigate('Description', {
@@ -39,10 +47,11 @@ const BookingView = ({ matches }) => {
             </TouchableOpacity> */}
 
             <Card.Content>
-              <Text>{item.description}</Text>
+              <Text style={[currentMatch === item.owner_id && styles.currentMatch,]}>{item.description}</Text>
             </Card.Content >
           </Card>
-        )))}
+          )
+          }))}
     </View>
   )
 
@@ -193,6 +202,12 @@ function MatchScreen() {
 }
 
 const styles = {
+  currentMatch: {
+    border: '8px solid lightblue'
+    // color: 'blue',
+    // fontSize:300,
+    // padding:150
+  },
   headerButton: {
     backgroundColor: "white",
     padding: 6,
