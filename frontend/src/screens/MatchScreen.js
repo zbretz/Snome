@@ -26,6 +26,99 @@ const BookingView = ({ matches }) => {
 
 }
 
+const DisplayView = ({ matches }) => {
+
+  const [active, setActive] = useState([0]);
+
+  const change = ({ nativeEvent }) => {
+    const slide = Math.ceil(
+      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+    );
+    if (slide !== active) {
+      setActive(slide);
+    }
+  };
+
+  return (
+
+    <ScrollView>
+      {/* <Image style={styles.tinyLogo} source={require('../pics/Snome.png')} /> */} 
+
+      {matches ? (
+        matches.map((item, index) => (
+          <Card style={styles.container} key={index}>
+            <TouchableOpacity
+              onPress={() => {
+                setTracker(item.snome_id);
+                navigation.navigate('Description', {
+                  snome_id: item.snome_id,
+                });
+              }}
+            >
+              <Card.Title
+                numberOfLines={3}
+                title={item.header}
+                subtitle={`Bedrooms: ${item.bedrooms}  Bathrooms: ${item.bathrooms}`}
+              />
+
+              <Title
+                style={styles.header}
+                subtitle={`Availability: ${item.availability_start} - ${item.availability_end}`}
+              />
+            </TouchableOpacity>
+            <Card.Content>
+              <View style={styles.imageContainer}>
+                <ScrollView
+                  pagingEnabled
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  onScroll={change}
+                  scrollEventThrottle={150}
+                  style={styles.scroll}
+                >
+                  {item.url.map((url, index) => (
+                    <Image
+                      key={index}
+                      source={{ uri: url }}
+                      style={styles.image}
+                    />
+                  ))}
+                </ScrollView>
+                <View style={styles.pagination}>
+                  {item.url.map((i, j) => (
+                    <Text
+                      key={j}
+                      style={
+                        j == active
+                          ? styles.pagingActiveText
+                          : styles.pagingText
+                      }
+                    >
+                      ⬤
+                    </Text>
+                  ))}
+                </View>
+              </View>
+              <Paragraph>{item.description}</Paragraph>
+            </Card.Content>
+            <Card.Actions>
+              {/* //need functionality for this to be unliked */}
+              <Button mode="outlined" icon="heart-off">
+                Unlike
+              </Button>
+            </Card.Actions>
+          </Card>
+        ))
+      ) : (
+        <Text>You don't have any liked Snome's...GO check some out!</Text>
+      )}
+
+      {/* <Button onPress={getData} title="get data">Get Data</Button> */}
+    </ScrollView>
+
+  )
+}
+
 
 function MatchScreen() {
   const [data, setData] = useState([]);
@@ -36,8 +129,6 @@ function MatchScreen() {
 
   // view will toggle 'display' and 'booking' views
   const [view, setView] = useState('display')
-
-  const [active, setActive] = useState([0]);
 
   const getMatches = async () => {
     try {
@@ -53,119 +144,22 @@ function MatchScreen() {
     getMatches();
   }, [tracker]);
 
-  const change = ({ nativeEvent }) => {
-    const slide = Math.ceil(
-      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
-    );
-    if (slide !== active) {
-      setActive(slide);
-    }
-  };
 
   return (
     <View style={{ height: screenHeight }}>
 
-<Text style={styles.title}>Your matches</Text>
+      <Text style={styles.title}>Your matches</Text>
 
+      <TouchableOpacity
+        onPress={() => {setView(() => view === 'display' ? 'booking' : 'display')}}
+      >
+        <Text style={styles.headerButton}>Book a match</Text>
 
-<TouchableOpacity
-          onPress={() => {
-            
-              setView(()=>view === 'display' ? 'booking' : 'display')
-          }
-          }
-        >
-          <Text style={styles.headerButton}>Book a match</Text>
+      </TouchableOpacity>
 
-        </TouchableOpacity>
+      {view === 'booking' && <BookingView />}
 
-    {view === 'booking' && 
-    
-      <BookingView />
-    
-    }
-      
-      <ScrollView>
-        {/* <Image style={styles.tinyLogo} source={require('../pics/Snome.png')} /> */}
-
-
-
-        {data ? (
-          data.map((item, index) => (
-            <Card style={styles.container} key={index}>
-              <TouchableOpacity
-                onPress={() => {
-                  setTracker(item.snome_id);
-                  navigation.navigate('Description', {
-                    snome_id: item.snome_id,
-                  });
-                }}
-              >
-                <Card.Title
-                  numberOfLines={3}
-                  title={item.header}
-                  subtitle={`Bedrooms: ${item.bedrooms}  Bathrooms: ${item.bathrooms}`}
-                />
-
-                <Title
-                  style={styles.header}
-                  subtitle={`Availability: ${item.availability_start} - ${item.availability_end}`}
-                />
-              </TouchableOpacity>
-              <Card.Content>
-                <View style={styles.imageContainer}>
-                  <ScrollView
-                    pagingEnabled
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    onScroll={change}
-                    scrollEventThrottle={150}
-                    style={styles.scroll}
-                  >
-                    {item.url.map((url, index) => (
-                      <Image
-                        key={index}
-                        source={{ uri: url }}
-                        style={styles.image}
-                      />
-                    ))}
-                  </ScrollView>
-                  <View style={styles.pagination}>
-                    {item.url.map((i, j) => (
-                      <Text
-                        key={j}
-                        style={
-                          j == active
-                            ? styles.pagingActiveText
-                            : styles.pagingText
-                        }
-                      >
-                        ⬤
-                      </Text>
-                    ))}
-                  </View>
-                </View>
-                <Paragraph>{item.description}</Paragraph>
-              </Card.Content>
-              <Card.Actions>
-                {/* //need functionality for this to be unliked */}
-                <Button mode="outlined" icon="heart-off">
-                  Unlike
-                </Button>
-              </Card.Actions>
-            </Card>
-          ))
-        ) : (
-          <Text>You don't have any liked Snome's...GO check some out!</Text>
-        )}
-
-
-
-        {/* <Button onPress={getData} title="get data">Get Data</Button> */}
-      </ScrollView>
-
-
-
+      {view === 'display' && <DisplayView matches={data} />}
 
     </View>
   );
