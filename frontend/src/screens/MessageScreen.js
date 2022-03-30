@@ -33,20 +33,29 @@ const styles = {
   }
 };
 
-const MessageCard = ({ message, setShowThread, user_id }) => {
+// const MessageCard = ({ message, setShowThread, user_id }) => {
+const MessageCard = ({ message }) => {
 
   return (
 
     <>
-      <TouchableOpacity style={{ flex: 1, flexDirection: 'row' }} onPress={() => setShowThread(message.sender_id === user_id ? message.recipient_id : message.sender_id)}>
-        <View style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+      <TouchableOpacity style={{ flex: 1, flexDirection: 'row' }} onPress={() => (null)}>
+        <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
         >
           <View >
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
+            {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
             <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
             <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
             <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text>
+            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
+
+            <Text style={{backgroundColor:'white'}}>message_sender: {message.sender_id}</Text>
+            <Text>message_recipient: {message.recipient_id}</Text>
+            <Text>{message.time}</Text>
+            <Text>{message.message_text}</Text>
+            <Text>{message.id}</Text>
+
+
           </View>
         </View>
       </TouchableOpacity>
@@ -73,31 +82,31 @@ const MessageScreen = () => {
 
     axios.post(
       'http://localhost:3000/messages/',
-      {sender_id:user_id, recipient_id:showThread, message_text:newMessage}
+      { sender_id: user_id, recipient_id: showThread, message_text: newMessage }
     )
-    .then((new_message)=>{
-      console.log('NEW MESSAGE DATA POST: ', new_message.data)
-      context.setMessages([ new_message.data, ...context.messages])
+      .then((new_message) => {
+        console.log('NEW MESSAGE DATA POST: ', new_message.data)
+        context.setMessages([new_message.data, ...context.messages])
       }
-    )
-    .catch(error => {
-      console.error(error);
-      console.log('Snome not able to be added to snome_message ', error)
-    })
+      )
+      .catch(error => {
+        console.error(error);
+        console.log('Snome not able to be added to snome_message ', error)
+      })
 
-  };  
+  };
 
   const groupMessagesByOtherUser = (messages) => {
     const conversationThreads = {}//{other_user: null, messages:[]}
     messages.forEach(msg => {
       let other_user = msg.recipient_id === user_id ? msg.sender_id : msg.recipient_id
-      if (!conversationThreads.hasOwnProperty(other_user)) {conversationThreads[other_user] = []}
-      conversationThreads[other_user].push(msg)      
+      if (!conversationThreads.hasOwnProperty(other_user)) { conversationThreads[other_user] = [] }
+      conversationThreads[other_user].push(msg)
     })
     console.log(conversationThreads)
-    Object.values(conversationThreads).map(i => {console.log(i[0])})
-console.log('map: ',     Object.values(conversationThreads).map(i => i[0].id)
-)
+    Object.values(conversationThreads).map(i => { console.log(i[0]) })
+    console.log('map: ', Object.values(conversationThreads).map(i => i[0].id)
+    )
     setConversations(conversationThreads)
     // return conversationThreads
   }
@@ -133,14 +142,14 @@ console.log('map: ',     Object.values(conversationThreads).map(i => i[0].id)
 
   const renderItem = ({ item }) => {
     return (
-      Object.entries(item).map((entry)=><Text key={entry.id}>{entry}</Text>)
-    // <MessageCard
-    //   // key ={item.id}
-    //   // style={{ flex: 1, flexDirection: 'row-reverse', }}
-    //   message={item}
-    //   // setShowThread={setShowThread}
-    //   // user_id={user_id}
-    // />
+      // Object.entries(item).map((entry)=><Text key={entry.id}>{entry}</Text>)
+      <MessageCard
+        key={item.id}
+        // style={{ flex: 1, flexDirection: 'row-reverse', }}
+        message={item}
+      // setShowThread={setShowThread}
+      // user_id={user_id}
+      />
     )
   }
 
@@ -155,14 +164,14 @@ console.log('map: ',     Object.values(conversationThreads).map(i => i[0].id)
             <>
               {/* <Text style={styles.headerButton}>Your Conversations</Text> */}
               <FlatList
-              //map over the FIRST (index 0) message from each conversation
+                //map over the FIRST (index 0) message from each conversation
                 data={Object.values(conversations).map(i => i[0])}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
               />
             </>
           }
-          {conversations && 
+          {conversations &&
             view === 'selected thread' &&
             <>
               {/* <View
