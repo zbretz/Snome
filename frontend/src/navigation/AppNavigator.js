@@ -35,8 +35,8 @@ const createScreenOptions = ({ route }) => {
   
   const iconName = TAB_ICON[route.name];
 
-  console.log(route.name)
-  console.log(context.alertScreen)
+  // console.log(route.name)
+  // console.log(context.alertScreen)
 
 
   return {

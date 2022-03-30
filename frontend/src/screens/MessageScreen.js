@@ -7,26 +7,10 @@ const axios = require('axios');
 
 
 const styles = {
-  this_user: {
-    borderColor: '#1e90ff',
-    textAlign: 'right',
-    flex: 1
-
-  },
   card: {
     margin: 4,
     borderWidth: 2,
     flex: 1
-  },
-  selectedUser: {
-    backgroundColor: '#ffbaa1'
-  },
-  selectedConvo: {
-    borderColor: '#96cbff',
-    borderWidth: 2
-  },
-  selectedConvoText: {
-    textAlign: 'right',
   },
   input: {
     height: 60,
@@ -54,8 +38,6 @@ const MessageCard = ({ message, setShowThread, user_id }) => {
   return (
 
     <>
-      {/* {!showThread && */}
-
       <TouchableOpacity style={{ flex: 1, flexDirection: 'row' }} onPress={() => setShowThread(message.sender_id === user_id ? message.recipient_id : message.sender_id)}>
         <View style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
         >
@@ -65,13 +47,9 @@ const MessageCard = ({ message, setShowThread, user_id }) => {
             <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
             <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
             <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text>
-
-
           </View>
         </View>
       </TouchableOpacity>
-      {/* } */}
-
     </>
   )
 }
@@ -82,34 +60,12 @@ const MessageScreen = () => {
   const user_id = context.user_data.user_id
   console.log(user_id)
 
-  let cm = context.mess
-
-  // const [messages, setMessages] = useState(context.messages)
-
-  const [messageQueue, setMessageQueue] = useState([])
   const [showThread, setShowThread] = useState(false)
   const [newMessage, setNewMessage] = useState()
-  const [keyboardStatus, setKeyboardStatus] = useState(undefined);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  // const [height, setHeight] = useState(0)
 
-  const [window, setWindow] = useState([])
   const [windowHeight, setWindowHeight] = useState(0)
   const tabBarHeight = useBottomTabBarHeight();
-
-  const sortMessagesByOtherUser = (messages) => {
-    const recentByOtherUser = {}
-    const message_queue = []
-    messages.forEach(msg => {
-      let other = msg.recipient_id === user_id ? msg.sender_id : msg.recipient_id
-      if (!recentByOtherUser.hasOwnProperty(other)) {
-        recentByOtherUser[other] = msg
-        message_queue.push(msg)
-      }
-    })
-    // return message_queue
-    setMessageQueue(message_queue)
-  }
 
   const sendMessage = async () => {
 
@@ -120,7 +76,6 @@ const MessageScreen = () => {
     .then((new_message)=>{
       console.log('NEW MESSAGE DATA POST: ', new_message.data)
       context.setMessages([ new_message.data, ...context.messages])
-      sortMessagesByOtherUser([new_message.data, ...context.messages])
       }
     )
     .catch(error => {
@@ -130,38 +85,11 @@ const MessageScreen = () => {
 
   };
 
-  // var ws = React.useRef(new WebSocket('ws://localhost:8080')).current;
-  const [serverMessages, setServerMessages] = useState('');
-
   useEffect(() => {
 
-    // let ws = context.websocket_connection
-
-    // ws.onopen = () => {
-    //   ws.send(JSON.stringify({source: 'client', id: user_id}))
-    // };
-
-    // // ws.onclose = (e) => {
-    // //   setServerState('Disconnected. Check internet or server.')
-    // //   setDisableButton(true);
-    // // };
-    // // ws.onerror = (e) => {
-    // //   setServerState(e.message);
-    // // };
-
-    // ws.onmessage = async (e) => {
-    //   console.log(e)
-    //   console.log(e.data)
-    //   console.log('parsed data: ', JSON.parse(e.data))
-    //   let new_message = JSON.parse(e.data)
-    //   console.log('NEW MESSAGE DATA WS: ', new_message)
-    //   console.log('messages[length-1]: ', context.messages[context.messages.length-1])
-    //   context.setMessages([new_message, ...context.messages])
-    //   // sortMessagesByOtherUser([new_message, ...context.messages])
-    // };
-
     if (context.messages) {
-      sortMessagesByOtherUser(context.messages)
+      // sortMessagesByOtherUser(context.messages)
+      console.log(context.messages)
     }
 
     const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {
@@ -175,7 +103,7 @@ const MessageScreen = () => {
 
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
-    setWindow(`${windowWidth} ${windowHeight}`)
+    // setWindow(`${windowWidth} ${windowHeight}`)
     setWindowHeight(windowHeight)
 
     return () => {
@@ -198,17 +126,17 @@ const MessageScreen = () => {
 
           {!showThread &&
             <>
-              <Text style={styles.headerButton}>Your Conversations</Text>
+              {/* <Text style={styles.headerButton}>Your Conversations</Text>
               <FlatList
                 data={messageQueue}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
-              />
+              /> */}
             </>
           }
           {showThread &&
             <>
-              <View
+              {/* <View
                 style={{
                   //the static numbers represent the text input height (with padding) and the headerButton height (padding)
                   height: windowHeight - keyboardHeight - tabBarHeight - 80 - 62
@@ -223,9 +151,8 @@ const MessageScreen = () => {
                   renderItem={renderItem}
                   keyExtractor={item => item.id}
                 />
-                {/* {console.log(Keyboard)} */}
 
-              </View>
+              </View> */}
 
               <TextInput
                 style={{
