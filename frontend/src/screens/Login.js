@@ -30,8 +30,6 @@ export default function Login() {
                 context.websocket_connection.send(JSON.stringify({source: 'client', id: user_id}))
             };
 
-            // if(context.messages){
-
             context.websocket_connection.onmessage = async (e) => {
                 console.log(e)
                 console.log(e.data)
@@ -41,17 +39,16 @@ export default function Login() {
 
                 context.setAlertScreen(notification_type)
 
-                console.log('sdcsdcd: ', notification_type)// === 'Message')
+                console.log('notification type: ', notification_type)
 
                 if (notification_type === 'Message'){
+                    let msg = context.messages
                     let new_message = JSON.parse(JSON.parse(e.data).notification_content)
                     console.log('NEW MESSAGE DATA WS: ', new_message)
                     console.log('messages[length-1]: ', context.messages[context.messages.length-1])
-                    context.setMessages([new_message, ...context.messages])
-                    // sortMessagesByOtherUser([new_message, ...context.messages])
+                    context.setMessages(msg => [new_message, ...msg])
                 }
               };
-            // }
 
         }
     }, [context.websocket_connection])

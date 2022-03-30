@@ -72,7 +72,7 @@ const MessageScreen = () => {
 
     axios.post(
       'http://localhost:3000/messages/',
-      { sender_id: user_id, recipient_id: showThread, message_text: newMessage }
+      { sender_id: user_id, recipient_id: selectedConvo, message_text: newMessage }
     )
       .then((new_message) => {
         console.log('NEW MESSAGE DATA POST: ', new_message.data)
@@ -93,10 +93,9 @@ const MessageScreen = () => {
       if (!conversationThreads.hasOwnProperty(other_user)) { conversationThreads[other_user] = [] }
       conversationThreads[other_user].push(msg)
     })
-    console.log(conversationThreads)
+    // console.log(conversationThreads)
     // Object.values(conversationThreads).map(i => { console.log(i[0]) })
-    console.log('map: ', Object.values(conversationThreads).map(i => i[0].id)
-    )
+    // console.log('map: ', Object.values(conversationThreads).map(i => i[0].id))
     setConversations(conversationThreads)
   }
 
@@ -177,9 +176,9 @@ const MessageScreen = () => {
           {view === 'selected thread' &&
 
 
-            <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
-            >
-              <View >
+<View style={{flex:1, flexDirection:"column", alignItems: "center"}}//style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+>
+                <View style={styles.allthreads} >
                 {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
               <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
