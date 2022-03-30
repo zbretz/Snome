@@ -175,8 +175,13 @@ function MatchScreen() {
       <TouchableOpacity
         onPress={() => { setView(() => view === 'display' ? 'booking' : 'display') }}
       >
-        <Text style={styles.headerButton}>Book a match</Text>
-
+        {view === 'booking' ?
+          <Text style={styles.headerButton}> Display all Matches
+          </Text>
+          :
+          <Text style={styles.headerButton}> Book a Match
+          </Text>
+        }
       </TouchableOpacity>
 
       {view === 'booking' && <BookingView matches={data} />}
@@ -191,7 +196,7 @@ const styles = {
   headerButton: {
     backgroundColor: "white",
     padding: 6,
-    height: 50,
+    // height: 50,
     width: '50%',
     textAlign: 'center',
     fontSize: 30,
