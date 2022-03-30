@@ -60,12 +60,14 @@ const MessageScreen = () => {
   const user_id = context.user_data.user_id
   console.log(user_id)
 
-  const [showThread, setShowThread] = useState(false)
+  const [view, setView] = useState('all threads')
   const [newMessage, setNewMessage] = useState()
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const [windowHeight, setWindowHeight] = useState(0)
   const tabBarHeight = useBottomTabBarHeight();
+
+  const [conversations, setConversations] = useState()
 
   const sendMessage = async () => {
 
@@ -85,7 +87,7 @@ const MessageScreen = () => {
 
   };  
 
-  const sortMessagesByOtherUser = (messages) => {
+  const groupMessagesByOtherUser = (messages) => {
     const conversationThreads = {}//{other_user: null, messages:[]}
     messages.forEach(msg => {
       let other_user = msg.recipient_id === user_id ? msg.sender_id : msg.recipient_id
@@ -93,13 +95,18 @@ const MessageScreen = () => {
       conversationThreads[other_user].push(msg)      
     })
     console.log(conversationThreads)
+    Object.values(conversationThreads).map(i => {console.log(i[0])})
+console.log('map: ',     Object.values(conversationThreads).map(i => i[0].id)
+)
+    setConversations(conversationThreads)
+    // return conversationThreads
   }
 
   useEffect(() => {
 
     if (context.messages) {
       // sortMessagesByOtherUser(context.messages)
-      sortMessagesByOtherUser(context.messages)
+      groupMessagesByOtherUser(context.messages)
       console.log(context.messages)
     }
 
@@ -125,8 +132,16 @@ const MessageScreen = () => {
   }, [context.messages])
 
   const renderItem = ({ item }) => {
-    return <MessageCard key ={item.id} style={{ flex: 1, flexDirection: 'row-reverse', }} message={item} setShowThread={setShowThread} user_id={user_id}
-    />
+    return (
+      Object.entries(item).map((entry)=><Text key={entry.id}>{entry}</Text>)
+    // <MessageCard
+    //   // key ={item.id}
+    //   // style={{ flex: 1, flexDirection: 'row-reverse', }}
+    //   message={item}
+    //   // setShowThread={setShowThread}
+    //   // user_id={user_id}
+    // />
+    )
   }
 
   return (
@@ -135,17 +150,20 @@ const MessageScreen = () => {
       {context => (
         <>
 
-          {!showThread &&
+          {conversations &&
+            view === 'all threads' &&
             <>
-              {/* <Text style={styles.headerButton}>Your Conversations</Text>
+              {/* <Text style={styles.headerButton}>Your Conversations</Text> */}
               <FlatList
-                data={messageQueue}
+              //map over the FIRST (index 0) message from each conversation
+                data={Object.values(conversations).map(i => i[0])}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
-              /> */}
+              />
             </>
           }
-          {showThread &&
+          {conversations && 
+            view === 'selected thread' &&
             <>
               {/* <View
                 style={{
