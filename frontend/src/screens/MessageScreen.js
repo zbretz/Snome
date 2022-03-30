@@ -226,9 +226,9 @@ const MessageScreen = () => {
                 // }}
               >
 
-                {/* <TouchableOpacity  >
-                  <Text style={styles.headerButton} onPress={() => setShowThread(false)}>Back to Messages</Text>
-                </TouchableOpacity> */}
+                <TouchableOpacity  >
+                  <Text style={styles.headerButton} onPress={() => setView('all threads')}>Back to Messages</Text>
+                </TouchableOpacity>
                 <FlatList
                   data={conversations[selectedConvo]}
                   renderItem={renderItem}
