@@ -33,43 +33,6 @@ const styles = {
   }
 };
 
-// const MessageCard = ({ message, setShowThread, user_id }) => {
-const MessageCard = ({ message, selectedConvo, setSelectedConvo, setView, user_id }) => {
-console.log('selectedConvo message card: ', selectedConvo)
-  return (
-
-    <>
-      <TouchableOpacity
-        style={{ flex: 1, flexDirection: 'row' }}
-        onPress={() => {
-          setView('selected thread')
-          setSelectedConvo(message.sender_id === user_id ? message.recipient_id : message.sender_id)
-          // return selectedConvo
-        }}>
-        <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
-        >
-          <View >
-            {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
-
-            <Text style={{backgroundColor:'white'}}>message_sender: {message.sender_id}</Text>
-            <Text>message_recipient: {message.recipient_id}</Text>
-            <Text>{message.time}</Text>
-            <Text>{message.message_text}</Text>
-            <Text>{message.id}</Text>
-
-            <Text>selectedConvo{selectedConvo}</Text>
-
-
-          </View>
-        </View>
-      </TouchableOpacity>
-    </>
-  )
-}
 
 const MessageScreen = () => {
 
@@ -159,13 +122,45 @@ const MessageScreen = () => {
         key={item.id}
         // style={{ flex: 1, flexDirection: 'row-reverse', }}
         message={item}
-        setView={setView}
-        selectedConvo = {selectedConvo}
-        setSelectedConvo = {setSelectedConvo}
+        // setView={setView}
+        // selectedConvo = {selectedConvo}
+        // setSelectedConvo = {setSelectedConvo}
         user_id={user_id}
       // setShowThread={setShowThread}
       // user_id={user_id}
       />
+    )
+  }
+
+  const MessageCard = ({ message }) => {
+  
+    return (
+      <>
+        <TouchableOpacity
+          // style={{ flex: 1, flexDirection: 'row' }}
+          onPress={() => {
+            setView('selected thread')
+            setSelectedConvo(message.sender_id === user_id ? message.recipient_id : message.sender_id)
+          }}>
+          <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+          >
+            <View >
+              {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
+  
+              <Text style={{backgroundColor:'white'}}>message_sender: {message.sender_id}</Text>
+              <Text>message_recipient: {message.recipient_id}</Text>
+              <Text>{message.time}</Text>
+              <Text>{message.message_text}</Text>
+              <Text>{message.id}</Text>
+  
+            </View>
+          </View>
+        </TouchableOpacity>
+      </>
     )
   }
 
@@ -196,23 +191,23 @@ const MessageScreen = () => {
             view === 'selected thread' &&
             <>
             <Text>{selectedConvo}</Text>
-              {/* <View
-                style={{
-                  //the static numbers represent the text input height (with padding) and the headerButton height (padding)
-                  height: windowHeight - keyboardHeight - tabBarHeight - 80 - 62
-                }}
+              <View
+                // style={{
+                //   //the static numbers represent the text input height (with padding) and the headerButton height (padding)
+                //   height: windowHeight - keyboardHeight - tabBarHeight - 80 - 62
+                // }}
               >
 
-                <TouchableOpacity  >
+                {/* <TouchableOpacity  >
                   <Text style={styles.headerButton} onPress={() => setShowThread(false)}>Back to Messages</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <FlatList
-                  data={context.messages.filter(msg => msg.sender_id === showThread || msg.recipient_id === showThread)}
+                  data={conversations[selectedConvo]}
                   renderItem={renderItem}
                   keyExtractor={item => item.id}
                 />
 
-              </View> */}
+              </View>
 
               <TextInput
                 style={{
