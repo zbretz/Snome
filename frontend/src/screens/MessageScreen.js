@@ -16,7 +16,9 @@ const styles = {
     width: '80%',
     // margin: 'auto',
     marginTop: 40,
-    boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
+    // nice shadows here:  https://getcssscan.com/css-box-shadow-examples
+    // boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    boxShadow: ' rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
     padding: 10
 
 
