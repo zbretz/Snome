@@ -135,7 +135,9 @@ const MessageScreen = () => {
   const MessageCard = ({ message }) => {
   
     return (
+      <View>
       <>
+      {view === 'all threads' &&
         <TouchableOpacity
           // style={{ flex: 1, flexDirection: 'row' }}
           onPress={() => {
@@ -160,7 +162,33 @@ const MessageScreen = () => {
             </View>
           </View>
         </TouchableOpacity>
+  }
       </>
+
+      <>
+      {view === 'selected thread' &&
+
+         
+          <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+          >
+            <View >
+              {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
+  
+              <Text style={{backgroundColor:'white'}}>message_sender: {message.sender_id}</Text>
+              <Text>message_recipient: {message.recipient_id}</Text>
+              <Text>{message.time}</Text>
+              <Text>{message.message_text}</Text>
+              <Text>{message.id}</Text>
+  
+            </View>
+          </View>
+  }
+      </>
+      </View>
     )
   }
 
