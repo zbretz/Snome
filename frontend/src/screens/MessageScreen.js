@@ -34,12 +34,18 @@ const styles = {
 };
 
 // const MessageCard = ({ message, setShowThread, user_id }) => {
-const MessageCard = ({ message }) => {
-
+const MessageCard = ({ message, selectedConvo, setSelectedConvo, setView, user_id }) => {
+console.log('selectedConvo message card: ', selectedConvo)
   return (
 
     <>
-      <TouchableOpacity style={{ flex: 1, flexDirection: 'row' }} onPress={() => (null)}>
+      <TouchableOpacity
+        style={{ flex: 1, flexDirection: 'row' }}
+        onPress={() => {
+          setView('selected thread')
+          setSelectedConvo(message.sender_id === user_id ? message.recipient_id : message.sender_id)
+          // return selectedConvo
+        }}>
         <View //style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
         >
           <View >
@@ -54,6 +60,8 @@ const MessageCard = ({ message }) => {
             <Text>{message.time}</Text>
             <Text>{message.message_text}</Text>
             <Text>{message.id}</Text>
+
+            <Text>selectedConvo{selectedConvo}</Text>
 
 
           </View>
@@ -70,6 +78,8 @@ const MessageScreen = () => {
   console.log(user_id)
 
   const [view, setView] = useState('all threads')
+  const [selectedConvo, setSelectedConvo] = useState(null)
+
   const [newMessage, setNewMessage] = useState()
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
@@ -141,19 +151,30 @@ const MessageScreen = () => {
   }, [context.messages])
 
   const renderItem = ({ item }) => {
+    console.log('selectedConvo renderItem: ', selectedConvo)
+
     return (
       // Object.entries(item).map((entry)=><Text key={entry.id}>{entry}</Text>)
       <MessageCard
         key={item.id}
         // style={{ flex: 1, flexDirection: 'row-reverse', }}
         message={item}
+        setView={setView}
+        selectedConvo = {selectedConvo}
+        setSelectedConvo = {setSelectedConvo}
+        user_id={user_id}
       // setShowThread={setShowThread}
       // user_id={user_id}
       />
     )
   }
 
+  console.log('message screen main: ', selectedConvo)
+
+
   return (
+
+
 
     <UserContext.Consumer>
       {context => (
@@ -174,6 +195,7 @@ const MessageScreen = () => {
           {conversations &&
             view === 'selected thread' &&
             <>
+            <Text>{selectedConvo}</Text>
               {/* <View
                 style={{
                   //the static numbers represent the text input height (with padding) and the headerButton height (padding)
