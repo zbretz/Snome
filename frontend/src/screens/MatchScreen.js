@@ -18,7 +18,7 @@ const { width } = Dimensions.get('window');
 const height = width * 0.6;
 
 
-const BookingView = ({ matches }) => {
+const BookingView = ({ matches, navigation }) => {
 
   const [currentMatch, setCurrentMatch] = useState();
 
@@ -34,9 +34,9 @@ const BookingView = ({ matches }) => {
           console.log(typeof item.owner_id)
           console.log(typeof currentMatch)
           return (
-          <Card style={[styles.container]} onPress={()=>setCurrentMatch(item.owner_id)} key={index}>
+            <Card style={[styles.container]} onPress={() => setCurrentMatch(item.owner_id)} key={index}>
 
-          {/* <TouchableOpacity
+              {/* <TouchableOpacity
             onPress={() => {
               setTracker(item.snome_id);
               navigation.navigate('Description', {
@@ -46,18 +46,36 @@ const BookingView = ({ matches }) => {
           >
             </TouchableOpacity> */}
 
-            <Card.Content>
-              <Text style={[currentMatch === item.owner_id && styles.currentMatch,]}>{item.description}</Text>
-            </Card.Content >
-          </Card>
+              <Card.Content>
+                <Text style={[currentMatch === item.owner_id && styles.currentMatch,]}>{item.description}</Text>
+              </Card.Content >
+            </Card>
+
+
           )
-          }))}
+        }))}
+
+      <View>
+        <Text>Message this snome:</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Message', {
+              // snome_id: item.snome_id,
+            });
+          }}
+        >
+          <Text>Message user: {currentMatch}</Text>
+        </TouchableOpacity>
+
+      </View>
+
+
     </View>
   )
 
 }
 
-const DisplayView = ({ matches }) => {
+const DisplayView = ({ matches, navigation, setTracker }) => {
 
   const [active, setActive] = useState([0]);
 
@@ -157,6 +175,8 @@ function MatchScreen() {
   const user_id = context.user_data.user_id;
   const setTracker = context.setTracker;
   const tracker = context.stateTracker;
+  const navigation = useNavigation();
+
 
   // view will toggle 'display' and 'booking' views
   const [view, setView] = useState('display')
@@ -193,9 +213,9 @@ function MatchScreen() {
         }
       </TouchableOpacity>
 
-      {view === 'booking' && <BookingView matches={data} />}
+      {view === 'booking' && <BookingView matches={data} navigation={navigation} />}
 
-      {view === 'display' && <DisplayView matches={data} />}
+      {view === 'display' && <DisplayView matches={data} navigation={navigation} setTracker={setTracker} />}
 
     </View>
   );
