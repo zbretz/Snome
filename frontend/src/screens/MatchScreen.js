@@ -35,40 +35,29 @@ const BookingView = ({ matches, navigation }) => {
           console.log(typeof currentMatch)
           return (
             <Card style={[styles.container]} onPress={() => setCurrentMatch(item.owner_id)} key={index}>
-
-              {/* <TouchableOpacity
-            onPress={() => {
-              setTracker(item.snome_id);
-              navigation.navigate('Description', {
-                snome_id: item.snome_id,
-              });
-            }}
-          >
-            </TouchableOpacity> */}
-
               <Card.Content>
                 <Text style={[currentMatch === item.owner_id && styles.currentMatch,]}>{item.description}</Text>
               </Card.Content >
             </Card>
-
-
           )
         }))}
 
-      <View>
-        <Text>Message this snome:</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Message', {
-              // snome_id: item.snome_id,
-            });
-          }}
-        >
-          <Text>Message user: {currentMatch}</Text>
-        </TouchableOpacity>
-
-      </View>
-
+      {currentMatch ?
+        <View>
+          <Text>Message this snome:</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Message', {
+                // snome_id: item.snome_id,
+              });
+            }}
+          >
+            <Text>Message user: {currentMatch}</Text>
+          </TouchableOpacity>
+        </View>
+        :
+        <Text>Select one of your matches for next steps</Text>
+      }
 
     </View>
   )
