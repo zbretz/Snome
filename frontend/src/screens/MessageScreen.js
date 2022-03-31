@@ -230,7 +230,6 @@ const MessageScreen = ({route}) => {
           {conversations &&
             view === 'selected thread' &&
             <>
-              <Text>{selectedConvo}</Text>
               <View
               // style={{
               //   //the static numbers represent the text input height (with padding) and the headerButton height (padding)
@@ -239,7 +238,7 @@ const MessageScreen = ({route}) => {
               >
 
                 <TouchableOpacity  >
-                  <Text style={styles.headerButton} onPress={() => setView('all threads')}>Back to Messages</Text>
+                  <Text style={styles.headerButton} onPress={() => setView('all threads')}>Back to All Conversations</Text>
                 </TouchableOpacity>
                 <FlatList
                   data={conversations[selectedConvo]}
