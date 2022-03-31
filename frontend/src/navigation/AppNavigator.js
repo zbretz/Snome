@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -11,6 +11,9 @@ import MessageScreen from '../screens/MessageScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ListingScreen from '../screens/ListingScreen';
 import DescScreen from '../screens/SnomeDescription';
+
+import UserContext from '../Context/UserContext';
+
 
 const TAB_ICON = {
   Home: 'home',
@@ -27,11 +30,21 @@ const Tab = createBottomTabNavigator();
 
 
 const createScreenOptions = ({ route }) => {
+
+  const context = useContext(UserContext);
+  
   const iconName = TAB_ICON[route.name];
+
+  // console.log(route.name)
+  // console.log(context.alertScreen)
+
 
   return {
     tabBarIcon: () => (
-      <MaterialIcons style={styles.icon} name={iconName} />
+      <MaterialIcons
+      style={route.name == context.alertScreen ? styles.active_icon : styles.icon}
+      name={iconName}
+      />
     )
   }
 }
@@ -60,6 +73,10 @@ export const AppNavigator = () => {
 const styles = StyleSheet.create({
   icon: {
     backgroundColor: 'gray',
-    padding: 10
+    padding: 10,
+  },
+  active_icon: {
+    backgroundColor: 'red',
+    padding: 10,
   }
 })

@@ -7,26 +7,27 @@ const axios = require('axios');
 
 
 const styles = {
-  this_user: {
-    borderColor: '#1e90ff',
-    textAlign: 'right',
-    flex: 1
+
+  allthreads: {
+
+    borderRadius: 20,
+    // border: '2px solid black',
+    backgroundColor: 'white',
+    width: '80%',
+    // margin: 'auto',
+    marginTop: 40,
+    // nice shadows here:  https://getcssscan.com/css-box-shadow-examples
+    // boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    boxShadow: ' rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+    padding: 10
+
 
   },
+
   card: {
     margin: 4,
     borderWidth: 2,
     flex: 1
-  },
-  selectedUser: {
-    backgroundColor: '#ffbaa1'
-  },
-  selectedConvo: {
-    borderColor: '#96cbff',
-    borderWidth: 2
-  },
-  selectedConvoText: {
-    textAlign: 'right',
   },
   input: {
     height: 60,
@@ -49,32 +50,6 @@ const styles = {
   }
 };
 
-const MessageCard = ({ message, setShowThread, user_id }) => {
-
-  return (
-
-    <>
-      {/* {!showThread && */}
-
-      <TouchableOpacity style={{ flex: 1, flexDirection: 'row' }} onPress={() => setShowThread(message.sender_id === user_id ? message.recipient_id : message.sender_id)}>
-        <View style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
-        >
-          <View >
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
-            <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text>
-
-
-          </View>
-        </View>
-      </TouchableOpacity>
-      {/* } */}
-
-    </>
-  )
-}
 
 const MessageScreen = ({route}) => {
 
@@ -85,45 +60,26 @@ const MessageScreen = ({route}) => {
   const user_id = context.user_data.user_id
   //console.log(user_id)
 
-  let cm = context.mess
+  const [view, setView] = useState('all threads')
+  const [selectedConvo, setSelectedConvo] = useState(null)
 
-  // const [messages, setMessages] = useState(context.messages)
-
-  const [messageQueue, setMessageQueue] = useState([])
-  const [showThread, setShowThread] = useState(false)
   const [newMessage, setNewMessage] = useState()
-  const [keyboardStatus, setKeyboardStatus] = useState(undefined);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  // const [height, setHeight] = useState(0)
 
-  const [window, setWindow] = useState([])
   const [windowHeight, setWindowHeight] = useState(0)
   const tabBarHeight = useBottomTabBarHeight();
 
-  const sortMessagesByOtherUser = (messages) => {
-    const recentByOtherUser = {}
-    const message_queue = []
-    messages.forEach(msg => {
-      let other = msg.recipient_id === user_id ? msg.sender_id : msg.recipient_id
-      if (!recentByOtherUser.hasOwnProperty(other)) {
-        recentByOtherUser[other] = msg
-        message_queue.push(msg)
-      }
-    })
-    // return message_queue
-    setMessageQueue(message_queue)
-  }
+  const [conversations, setConversations] = useState()
 
   const sendMessage = async () => {
 
     axios.post(
       'http://localhost:3000/messages/',
-      { sender_id: user_id, recipient_id: showThread, message_text: newMessage }
+      { sender_id: user_id, recipient_id: selectedConvo, message_text: newMessage }
     )
       .then((new_message) => {
-        // console.log('NEW MESSAGE DATA POST: ', new_message.data)
+        console.log('NEW MESSAGE DATA POST: ', new_message.data)
         context.setMessages([new_message.data, ...context.messages])
-        sortMessagesByOtherUser([new_message.data, ...context.messages])
       }
       )
       .catch(error => {
@@ -133,39 +89,24 @@ const MessageScreen = ({route}) => {
 
   };
 
-  var ws = React.useRef(new WebSocket('ws://localhost:8080')).current;
-  const [serverMessages, setServerMessages] = useState('');
-
-  const [temp, setTemp] = useState('empty')
+  const groupMessagesByOtherUser = (messages) => {
+    const conversationThreads = {}//{other_user: null, messages:[]}
+    messages.forEach(msg => {
+      let other_user = msg.recipient_id === user_id ? msg.sender_id : msg.recipient_id
+      if (!conversationThreads.hasOwnProperty(other_user)) { conversationThreads[other_user] = [] }
+      conversationThreads[other_user].push(msg)
+    })
+    // console.log(conversationThreads)
+    // Object.values(conversationThreads).map(i => { console.log(i[0]) })
+    // console.log('map: ', Object.values(conversationThreads).map(i => i[0].id))
+    setConversations(conversationThreads)
+  }
 
   useEffect(() => {
 
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ source: 'client', id: user_id }))
-
-    };
-    // ws.onclose = (e) => {
-    //   setServerState('Disconnected. Check internet or server.')
-    //   setDisableButton(true);
-    // };
-    // ws.onerror = (e) => {
-    //   setServerState(e.message);
-    // };
-    ws.onmessage = async (e) => {
-      // console.log(e)
-      // console.log(e.data)
-      // console.log('parsed data: ', JSON.parse(e.data))
-      let new_message = JSON.parse(e.data)
-      // console.log('NEW MESSAGE DATA WS: ', new_message)
-      // sortMessagesByOtherUser([new_message, ...messages])
-      //console.log('messages[length-1]: ', context.messages[context.messages.length - 1])
-      context.setMessages([new_message, ...context.messages])
-      sortMessagesByOtherUser([new_message, ...context.messages])
-    };
-
-
     if (context.messages) {
-      sortMessagesByOtherUser(context.messages)
+      groupMessagesByOtherUser(context.messages)
+      // console.log(context.messages)
     }
 
     const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {
@@ -179,7 +120,7 @@ const MessageScreen = ({route}) => {
 
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
-    setWindow(`${windowWidth} ${windowHeight}`)
+    // setWindow(`${windowWidth} ${windowHeight}`)
     setWindowHeight(windowHeight)
 
     return () => {
@@ -190,44 +131,116 @@ const MessageScreen = ({route}) => {
   }, [context.messages])
 
   const renderItem = ({ item }) => {
-    return <MessageCard key={item.id} style={{ flex: 1, flexDirection: 'row-reverse', }} message={item} setShowThread={setShowThread} user_id={user_id}
-    />
+
+    return (
+      <MessageCard
+        key={item.id}
+        // style={{ flex: 1, flexDirection: 'row-reverse', }}
+        message={item}
+        user_id={user_id}
+      />
+    )
+  }
+
+  const MessageCard = ({ message }) => {
+
+    return (
+      <View>
+        <>
+          {view === 'all threads' &&
+            <TouchableOpacity
+              // style={{ flex: 1, flexDirection: 'row' }}
+              onPress={() => {
+                setView('selected thread')
+                setSelectedConvo(message.sender_id === user_id ? message.recipient_id : message.sender_id)
+              }}>
+              <View style={{flex:1, flexDirection:"column", alignItems: "center"}}//style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+              >
+                <View style={styles.allthreads} >
+                  {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
+
+                  <Text>message_sender: {message.sender_id}</Text>
+                  <Text>message_recipient: {message.recipient_id}</Text>
+                  <Text>{message.time}</Text>
+                  <Text>{message.message_text}</Text>
+                  <Text>{message.id}</Text>
+
+                </View>
+              </View>
+            </TouchableOpacity>
+          }
+        </>
+
+        <>
+          {view === 'selected thread' &&
+
+
+<View style={{flex:1, flexDirection:"column", alignItems: "center"}}//style={[styles.card, message.sender_id === user_id && styles.selectedConvo]}
+>
+                <View style={styles.allthreads} >
+                {/* <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_sender: {message.sender_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>message_recipient: {message.recipient_id}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.time}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.message_text}</Text>
+              <Text style={[message.sender_id === user_id && styles.selectedConvoText]}>{message.id}</Text> */}
+
+                <Text style={{ backgroundColor: 'white' }}>message_sender: {message.sender_id}</Text>
+                <Text>message_recipient: {message.recipient_id}</Text>
+                <Text>{message.time}</Text>
+                <Text>{message.message_text}</Text>
+                <Text>{message.id}</Text>
+
+              </View>
+            </View>
+          }
+        </>
+      </View>
+    )
   }
 
   return (
+
+
 
     <UserContext.Consumer>
       {context => (
         <>
 
-          {!showThread &&
+          {conversations &&
+            view === 'all threads' &&
             <>
-              <Text style={styles.headerButton}>Your Conversations</Text>
+              {/* <Text style={styles.headerButton}>Your Conversations</Text> */}
               <FlatList
-                data={messageQueue}
+                //map over the FIRST (index 0) message from each conversation
+                data={Object.values(conversations).map(i => i[0])}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
               />
             </>
           }
-          {showThread &&
+          {conversations &&
+            view === 'selected thread' &&
             <>
+              <Text>{selectedConvo}</Text>
               <View
-                style={{
-                  //the static numbers represent the text input height (with padding) and the headerButton height (padding)
-                  height: windowHeight - keyboardHeight - tabBarHeight - 80 - 62
-                }}
+              // style={{
+              //   //the static numbers represent the text input height (with padding) and the headerButton height (padding)
+              //   height: windowHeight - keyboardHeight - tabBarHeight - 80 - 62
+              // }}
               >
 
                 <TouchableOpacity  >
-                  <Text style={styles.headerButton} onPress={() => setShowThread(false)}>Back to Messages</Text>
+                  <Text style={styles.headerButton} onPress={() => setView('all threads')}>Back to Messages</Text>
                 </TouchableOpacity>
                 <FlatList
-                  data={context.messages.filter(msg => msg.sender_id === showThread || msg.recipient_id === showThread)}
+                  data={conversations[selectedConvo]}
                   renderItem={renderItem}
                   keyExtractor={item => item.id}
                 />
-                {/* {console.log(Keyboard)} */}
 
               </View>
 

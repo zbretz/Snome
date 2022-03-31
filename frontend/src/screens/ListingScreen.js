@@ -78,7 +78,7 @@ function ListingScreen({ route }) {
   };
 
   //post request to the db to add this listing to users likes
-  const addToLikes = async (snome_id) => {
+  const addToLikes = async (snome_id, owner_id) => {
     const status = {
       likes: await checkLikes(snome_id),
     };
@@ -97,7 +97,7 @@ function ListingScreen({ route }) {
             likeObj.snome_id +
             '/' +
             likeObj.snome_user_id,
-          {}
+          {owner_id:owner_id}
         )
         .catch((error) => {
           console.error(error);
@@ -174,7 +174,7 @@ function ListingScreen({ route }) {
                 mode="outined"
                 // style={styles.button}
                 icon="heart-outline"
-                onPress={() => {addToLikes(listing.snome_id)}}
+                onPress={() => {addToLikes(listing.snome_id, listing.owner_id)}}
               >
                 <Text>I like this Snome!</Text>
               </Button>

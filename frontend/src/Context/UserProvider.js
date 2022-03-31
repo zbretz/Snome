@@ -7,8 +7,8 @@ function UserProvider(props) {
   const [location, setLocation] = useState()
   const [messages, setMessages] = useState(null);
   const [stateTracker, setTracker] = useState(null)
-  let user_messages;
-
+  const [websocket_connection, setWebsocket_connection] = useState(null)
+  const [alertScreen, setAlertScreen] = useState('')
 
   const appDataFetch = async () => {
     try {
@@ -45,7 +45,7 @@ function UserProvider(props) {
 
   return (
     <UserContext.Provider
-      value={{ stateTracker: stateTracker, setTracker: setTracker, messages: messages, setMessages: setMessages, user_data: userData, setUserData: setUserData, location_data: location }}
+      value={{alertScreen:alertScreen, setAlertScreen: setAlertScreen, websocket_connection: websocket_connection, setWebsocket_connection: setWebsocket_connection, stateTracker: stateTracker, setTracker: setTracker, messages: messages, setMessages: setMessages, user_data: userData, setUserData: setUserData, location_data: location }}
     >
       {props.children}
     </UserContext.Provider>

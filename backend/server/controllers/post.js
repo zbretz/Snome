@@ -92,18 +92,34 @@ module.exports = {
   //createUser moved to './user'
 
   createLike: async (req, res) => {
-    try {
-      await post.createLike(req.params);
-      let result = await get.checkMatch(req.params);
-      if(result.state) {
-        await post.createMatch(result.data);
-      }
-      console.log(result);
-      res.status(200).send('Success!');
-    } catch (err) {
-      console.log(err);
-      res.status(400).send(err);
-    }
+    // try {
+    //   console.log(req.params);
+    //   let data = await post.createLike(req.params);
+    //   res.status(200).json(data);
+    // } catch (err) {
+    //   console.log(err);
+    //   res.status(400).send(err);
+    // }
+
+    post
+      .createLike(req.params)
+      .then((data) => {
+        res.send(data);
+      })
+      .then((data) => {
+        //once saved to db, send to recipient via websockets
+        axios.post(`http://localhost:8080/${req.body.owner_id}`,
+        {notification_type: 'Likes'},// notification_content: JSON.stringify({...req.body, time: data.time, id: data.id})},
+        // {msg_txt: req.body.message_text},
+        {headers: {'Content-Type': 'application/json;charset=utf-8'}}
+        )
+      })
+      .catch(err => {
+        res.status(500).send(
+          "Some error occurred while creating the message."
+        )
+      })
+
   },
 
   createMessage: (req, res) => {
@@ -128,7 +144,7 @@ module.exports = {
         // console.log(JSON.stringify({...req.body, time: data}))
         //once saved to db, send to recipient via websockets
         axios.post(`http://localhost:8080/${req.body.recipient_id}`,
-        {msg_txt: JSON.stringify({...req.body, time: data.time, id: data.id})},
+        {notification_type: 'Message', notification_content: JSON.stringify({...req.body, time: data.time, id: data.id})},
         // {msg_txt: req.body.message_text},
         {headers: {'Content-Type': 'application/json;charset=utf-8'}}
         )

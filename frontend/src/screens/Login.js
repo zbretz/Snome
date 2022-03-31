@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView, TextInput, Button, Image, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UserContext from '../Context/UserContext'
@@ -13,12 +13,45 @@ export default function Login() {
         UseTogglePasswordVisibility();
     const navigation = useNavigation()
     const context = useContext(UserContext)
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [user_id, setUser_id] = useState(null)
 
+    // let user_id;
 
     const B = (props) => <Text style={{ fontWeight: 'bold', color: "#448EB1" }}>{props.children}</Text>
+
+    useEffect(()=>{
+        console.log('useeffect ws connection 1: ', context.websocket_connection)
+        if(context.websocket_connection){
+            console.log('useeffect ws connection 2: ', context.websocket_connection)
+            context.websocket_connection.onopen = () => {
+                console.log('use Effect user_id: ', user_id)
+                context.websocket_connection.send(JSON.stringify({source: 'client', id: user_id}))
+            };
+
+            context.websocket_connection.onmessage = async (e) => {
+                console.log(e)
+                console.log(e.data)
+                console.log('parsed data: ', JSON.parse(e.data))
+
+                let notification_type = JSON.parse(e.data).notification_type
+
+                context.setAlertScreen(notification_type)
+
+                console.log('notification type: ', notification_type)
+
+                if (notification_type === 'Message'){
+                    let msg = context.messages
+                    let new_message = JSON.parse(JSON.parse(e.data).notification_content)
+                    console.log('NEW MESSAGE DATA WS: ', new_message)
+                    console.log('messages[length-1]: ', context.messages[context.messages.length-1])
+                    context.setMessages(msg => [new_message, ...msg])
+                }
+              };
+
+        }
+    }, [context.websocket_connection])
 
     const login = async (e) => {
         e.preventDefault()
@@ -30,7 +63,26 @@ export default function Login() {
                 password: password
             }
         })
+        .then(async (res) => {
+            // user_id = res.data.auth_user.id
+            console.log('user id: ', res.data.auth_user.id)
+            let user_messages = await fetch(`http://localhost:3000/messages/${res.data.auth_user.id}`)
+            let messages_json = await user_messages.json()
+            context.setMessages(messages_json)
+
+            return res
+
+        })
             .then(res => {
+
+                setUser_id(res.data.auth_user.id)
+                // console.log('axios user_id: ', user_id)
+                console.log('OTHER axios user_id: ', res.data.auth_user.id)
+
+                context.setWebsocket_connection(new WebSocket('ws://localhost:8080'))
+
+                console.log('!!!websocket connection: ', context.websocket_connection)
+
                 console.log(res)
                 console.log(res.data);
                 //set token in local storage- on mobile
@@ -43,16 +95,10 @@ export default function Login() {
                     is_logged_in: true,
                     username: username
                 })
+
                 return res
             })
-            .then(async (res) => {
-                let user_id = res.data.auth_user.id
-                console.log('user id: ', user_id)
-                console.log('user id type: ', typeof user_id)
-                let user_messages = await fetch(`http://localhost:3000/messages/${user_id}`)
-                let messages_json = await user_messages.json()
-                context.setMessages(messages_json)
-            })
+
             .catch(err => {
                 console.log(err)
             })
