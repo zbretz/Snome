@@ -48,7 +48,7 @@ const BookingView = ({ matches, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('Message', {
-                // snome_id: item.snome_id,
+                other_user: currentMatch,
               });
             }}
           >

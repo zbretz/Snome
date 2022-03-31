@@ -54,7 +54,7 @@ const styles = {
 const MessageScreen = ({route}) => {
 
   const params = route.params;
-  console.log('parqms passed by match screen: ', route)
+  console.log('params passed by match screen: ', params)
 
   const context = useContext(UserContext)
   const user_id = context.user_data.user_id
@@ -106,7 +106,12 @@ const MessageScreen = ({route}) => {
 
     if (context.messages) {
       groupMessagesByOtherUser(context.messages)
-      // console.log(context.messages)
+    }
+
+    if (params?.other_user){
+      console.log(params)
+      setView('selected thread')
+      setSelectedConvo(params.other_user)
     }
 
     const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {
